@@ -1,0 +1,77 @@
+{% extends "app/layout.html" %}
+
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'app/catalog.css' %}">
+{% endblock %}
+
+{% block body %}
+
+<h2>{{ title }}</h2>
+
+{% if sub_title %}
+<h3>{{ sub_title }}</h3>
+{% endif %}
+
+{% if product %}
+<table>
+    <tr>
+      <th>No.</th>
+      <th>SKU</th>
+      <th>Name</th>
+      <th>Color</th>
+      <th>Category</th>
+      <th>Price today</th>
+      <th>Discount</th>
+      <th>Price</th>
+    </tr>
+
+    <tr>
+        <td>{{ product.id }}</td>
+        <td>{{ product.sku }}</td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.color.color }}</td>
+        <td>{{ product.category.category }}</td>
+        <td>$ {{ product.price_today }}</td>
+        <td>{{ product.price.discount }} %</td>
+        <td>$ {{ product.price.price }}</td>
+    </tr>
+
+</table>
+
+<h2>Order</h2>
+{% if message %}
+{{ message }}<br><br>
+{% endif %}
+<form action="/add-to-cart" method="post">
+    {% csrf_token %}
+    <select name="size">
+        {% if product.stock.S > 0 %}
+        <option value="S">S</option>
+        {% endif %}
+        {% if product.stock.M > 0 %}
+        <option value="M">M</option>
+        {% endif %}
+        {% if product.stock.L > 0 %}
+        <option value="L">L</option>
+        {% endif %}
+        {% if product.stock.XL > 0 %}
+        <option value="XL">XL</option>
+        {% endif %}
+    </select><br><br>
+    <input type="submit" value="Add to cart">
+    <input hidden name="product_id" value="{{ product.id }}">
+</form>
+
+{% else %}
+<i>404: Product not found...</i>
+{% endif %}
+
+{% endblock %}
+
+
+<!--
+<label for="S">S</label>
+<input type="number" name="S" min="0" max="{{ product.stock.S }}">
+-->
