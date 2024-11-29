@@ -1,0 +1,45 @@
+{% extends "app/layout.html" %}
+
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'app/catalog.css' %}">
+{% endblock %}
+
+{% block body %}
+<h2>{{ title }}</h2>
+
+{% if sub_title %}
+<h3>{{ sub_title }}</h3>
+{% endif %}
+
+{% if products|length == 0 %}
+No products yet.
+{% else %}
+<table>
+    <tr>
+      <th>No.</th>
+      <th>SKU</th>
+      <th>Name</th>
+      <th>Color</th>
+      <th>Category</th>
+      <th>Price today</th>
+      <th>Discount</th>
+      <th>Price</th>
+    </tr>
+
+    {% for product in products %}
+    <tr>
+        <td>{{ product.id }}</td>
+        <td><a href="{% url 'product' id=product.id %}">{{ product.sku }}</a></td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.color }}</td>
+        <td>{{ product.category }}</td>
+        <td>$ {{ product.price_today }}</td>
+        <td>{{ product.price.discount }} %</td>
+        <td>$ {{ product.price.price }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+{% endblock %}
