@@ -1,0 +1,63 @@
+{% extends "app/layout.html" %}
+
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'app/catalog.css' %}">
+{% endblock %}
+
+{% block boutique %}
+{% endblock %}
+
+{% block body %}
+<br>
+<h2>{{ title }}</h2>
+
+{% if sub_title %}
+<br>
+<h3>{{ sub_title }}</h3>
+{% endif %}
+
+{% if products|length == 0 %}
+<i>You have a total of 0 products in your car...</i>
+{% else %}
+You have reserved a total of {{ count }} products. <br><br>
+<table>
+    <tr>
+      <th>Name</th>
+      <th>Color</th>
+      <th>S</th>
+      <th>M</th>
+      <th>L</th>
+      <th>XL</th>
+      <th>Price today</th>
+      <th>Discount</th>
+      <th>Price</th>
+      <th>Total</th>
+    </tr>
+    {% for product in products %}
+    <tr>
+        <td><a href="{% url 'product' id=product.id %}">{{ product.name }}</a></td>
+        <td>{{ product.color }}</td>
+        <td>{{ product.stock.S }}</td>
+        <td>{{ product.stock.M }}</td>
+        <td>{{ product.stock.L }}</td>
+        <td>{{ product.stock.XL }}</td>
+        <td>$ {{ product.price_today }}</td>
+        <td>{{ product.price.discount }} %</td>
+        <td>$ {{ product.price.price }}</td>
+        <td>$ {{ product.total }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<br>
+<br>
+<h3>Order</h3>
+Total of $ {{ total }}
+<form action="{% url 'cart_purchase' %}" method="post">
+  {% csrf_token %}
+  <br>
+  <input type="submit" value="Purchase">
+</form>
+{% endif %}
+{% endblock %}
